@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Detector de Morango 🍓</title>
+
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.13.0/dist/tf.min.js"></script>
+    <!-- Teachable Machine Image -->
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"></script>
+</head>
+<body style="text-align:center; font-family:Arial; margin-top:40px;">
+
+    <h1>Detector de Morango 🍓</h1>
+
+    <input type="file" id="upload">
+    <p id="resultado">Carregando modelo...</p>
+    <img id="preview" width="250">
+
+    <script>
+        let model;
+        let maxPredictions;
+
+        async function loadModel() {
+            const URL = "model/"; // pasta com model.json, metadata.json e weights.bin
+
+            try {
+                // Carrega o modelo do Teachable Machine
+                model = await tmImage.load(URL + "model.json", URL + "metadata.json");
+                maxPredictions = model.getTotalClasses();
+
+                document.getElementById("resultado").innerText = "Modelo pronto!";
+            } catch (err) {
+                console.error("Erro ao carregar o modelo:", err);
+                document.getElementById("resultado").innerText = "Erro ao carregar modelo.";
+            }
+        }
+
+        // Chama o carregamento do modelo
+        loadModel();
+
+        // Evento para quando o usuário escolher arquivo
+        document.getElementById("upload").addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const img = document.getElementById("preview");
+            img.src = URL.createObjectURL(file);
+
+            img.onload = async () => {
+                if (!model) {
+                    document.getElementById("resultado").innerText = "Modelo ainda não carregado!";
+                    return;
+                }
+
+                try {
+                    const prediction = await model.predict(img);
+
+                    // Encontra a classe com maior probabilidade
+                    let melhor = prediction[0];
+                    for (let i = 1; i < prediction.length; i++) {
+                        if (prediction[i].probability > melhor.probability) {
+                            melhor = prediction[i];
+                        }
+                    }
+
+                    document.getElementById("resultado").innerText =
+                        melhor.className + " (" + (melhor.probability * 100).toFixed(2) + "%)";
+                } catch (err) {
+                    console.error("Erro na predição:", err);
+                    document.getElementById("resultado").innerText = "Erro ao fazer predição.";
+                }
+            };
+        });
+    </script>
+
+</body>
+</html>
