@@ -43,4 +43,21 @@ Este projeto funcionou como uma **Prova de Conceito (PoC)**. A discrepância ent
 Este trabalho permitiu compreender na prática que a IA vai muito além da codificação. A qualidade da solução está na qualidade da curadoria dos dados. O desafio enfrentado não foi um erro, mas uma etapa fundamental no aprendizado de qualquer engenheiro de dados.
 
 ---
-*Projeto desenvolvido como parte do aprendizado em Visão Computacional e IA.*
+
+Integrar o sistema de visão computacional desenvolvido na C2 com uma LLM através da plataforma Groq.
+
+Tecnologias Utilizadas
+Python
+YOLOv8 (Ultralytics)
+Groq API
+Llama 3.1 8B Instant
+Google Colab
+Funcionamento
+O YOLO analisa a imagem do morango.
+O resultado é estruturado em formato JSON.
+Os dados são enviados para uma LLM via Groq.
+A LLM interpreta os resultados.
+O usuário recebe uma análise em linguagem natural.
+Modelo Escolhido
+
+Foi utilizado o modelo Llama 3.1 8B Instant por apresentar boa velocidade de resposta e qualidade adequada para interpretação dos dados produzidos pelo YOLO.
